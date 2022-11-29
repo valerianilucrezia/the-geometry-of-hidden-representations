@@ -2,3 +2,4 @@
 .DS_STORE
 ._plot-results*
 plot-results-jvsc-*
+__pycache__
