@@ -1,0 +1,5 @@
+.project
+._.ipynb_checkpoints
+.DS_STORE
+.___pycache__
+._plot-results*
