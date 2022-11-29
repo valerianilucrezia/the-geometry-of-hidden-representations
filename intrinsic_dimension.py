@@ -9,6 +9,7 @@ from scipy.stats import pearsonr
 from sklearn import linear_model
 from math import sqrt
 from scipy.spatial.distance import pdist, squareform
+
 import os
 import pandas as pd
 import argparse
@@ -16,7 +17,6 @@ from argparse import Namespace
 import random    
               
 def estimate(X,fraction=0.8,verbose=False):    
-    
     # sort distance matrix
     Y = np.sort(X,axis=1,kind='quicksort')
     # clean data
