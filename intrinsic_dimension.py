@@ -3,27 +3,14 @@
 """
 @author: alessio ansuini (alessioansuini@gmail.com)
 """
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import pearsonr
 from sklearn import linear_model
-from math import sqrt
-from scipy.spatial.distance import pdist, squareform
-
-import os
 import pandas as pd
-import argparse
-from argparse import Namespace
-import random    
 
 import plotly.graph_objects as go
-from plotly.graph_objects import Layout
-import plotly.io as pio
-from plotly.subplots import make_subplots
-import seaborn as sns
-import plotly.express as px
               
-def estimate(X,fraction=0.8,verbose=False):    
+def estimate(X, fraction=0.8, verbose=False):    
     # sort distance matrix
     Y = np.sort(X,axis=1,kind='quicksort')
     # clean data
@@ -74,9 +61,9 @@ def estimate(X,fraction=0.8,verbose=False):
     # regression
     regr = linear_model.LinearRegression(fit_intercept=False)
     regr.fit(x[0:npoints,np.newaxis],y[0:npoints,np.newaxis]) 
-    r,pval = pearsonr(x[0:npoints], y[0:npoints])  
+    r, pval = pearsonr(x[0:npoints], y[0:npoints])  
     
-    return x,y,regr.coef_[0][0],r,pval,npoints                    
+    return x, y, regr.coef_[0][0], r, pval, npoints                    
   
                       
 def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):    
@@ -91,41 +78,47 @@ def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):
         idx = idx[0:npoints*b]
         split = np.split(idx,b)      
         tdim = np.zeros(b)
+        
         for i in range(b):
             I = np.meshgrid(split[i], split[i], indexing='ij')
             tX = X[tuple(I)]
-            _,_,reg,_,_,npoints = estimate(tX,fraction=fraction,verbose=False)
-            tdim[i] = reg          
+            _, _, reg, _, _, npoints = estimate(tX, fraction=fraction, verbose=False)
+            tdim[i] = reg           
+       
         dim[blocks.index(b)] = np.mean(tdim)
         std[blocks.index(b)] = np.std(tdim)
         n_points.append(npoints)
     
-    return dim,std,n_points
+    return dim, std, n_points
 
 
-def save_ID_results(dim, std, n_points, filename = '', save = False):
+def save_ID_results(dim, std, n_points, filename='', save=False):
     block_df = pd.DataFrame(columns =  ['dim','std','n_points'])
     block_df['dim'] = dim
     block_df['std'] = std
     block_df['n_points'] = n_points
+    
     if save:
         if filename != '':
-            block_df.to_csv(filename, sep = '\t', index = False)
+            block_df.to_csv(filename, sep='\t', index=False)
         else:
             'Missing filename!'
+    
     return block_df
 
 
-def plot_curve_ID(fig,reps,mean,cline,name,r=1,c=1,legend=True):
-    fig.add_trace(go.Scatter(x=reps,
-                            y=mean,
-                            mode='lines+markers',
+def plot_curve_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
+    fig.add_trace(go.Scatter(x = reps,
+                            y = mean,
+                            mode ='lines+markers',
                             name = name,
                             marker = dict(color=cline, size=9),
-                            line = dict(color=cline,width=3),
-                            showlegend=legend,
-                            
-    ),row=r, col=c)
+                            line = dict(color=cline, width=3),
+                            showlegend = legend,      
+                            ),
+                    row = r, 
+                    col = c
+                )
     return fig
 
 
