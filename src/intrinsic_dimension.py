@@ -57,7 +57,6 @@ def estimate(X, fraction=0.8, verbose=False):
     x = df['X'].to_numpy()
     y = df['Y'].to_numpy()
     
-     
     # regression
     regr = linear_model.LinearRegression(fit_intercept=False)
     regr.fit(x[0:npoints,np.newaxis],y[0:npoints,np.newaxis]) 
