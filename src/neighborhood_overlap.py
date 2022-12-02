@@ -23,7 +23,7 @@ def get_data(path, nlayer, label_path='', ng=100):
         idx = np.load(path + str(i) + '-idx.npy')
 
         if label_path != '':
-            label = open(label_path + 'sp_lab.txt')
+            label = open(label_path)
             label = np.array([l.strip('\n') for l in label])
             ds = add_data(ds, i, neig, idx, ng, label)
         

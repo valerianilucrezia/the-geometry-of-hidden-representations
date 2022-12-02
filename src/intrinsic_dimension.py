@@ -7,15 +7,17 @@ import numpy as np
 from scipy.stats import pearsonr
 from sklearn import linear_model
 import pandas as pd
+import os
+import random
 
 import plotly.graph_objects as go
+import plotly.io as pio
+
               
-def estimate(X, fraction=0.8, verbose=False):    
-    # sort distance matrix
-    Y = np.sort(X,axis=1,kind='quicksort')
-    # clean data
-    k1 = Y[:,1]
-    k2 = Y[:,2]
+def estimate(Y, fraction=0.8, verbose=False):  
+    # print('start') 
+    k1 = Y[:,0]
+    k2 = Y[:,1]
 
     zeros = np.where(k1 == 0)[0]
     if verbose:
@@ -27,7 +29,7 @@ def estimate(X, fraction=0.8, verbose=False):
         print('Found n. {} elements for which r1 = r2'.format(degeneracies.shape[0]))
         print(degeneracies)
 
-    good = np.setdiff1d(np.arange(Y.shape[0]), np.array(zeros) )
+    good = np.setdiff1d(np.arange(k1.shape[0]), np.array(zeros) )
     good = np.setdiff1d(good,np.array(degeneracies))
     
     if verbose:
@@ -65,27 +67,19 @@ def estimate(X, fraction=0.8, verbose=False):
     return x, y, regr.coef_[0][0], r, pval, npoints                    
   
                       
-def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):    
-    n = X.shape[0]
+def block_analysis(X,blocks=list(range(1, 21)), fraction=0.8):    
     dim = np.zeros(len(blocks))
     std = np.zeros(len(blocks))
     n_points = []
    
     for b in blocks:        
-        idx = np.random.permutation(n)
-        npoints = int(np.floor((n / b )))
-        idx = idx[0:npoints*b]
-        split = np.split(idx,b)      
+        # print(b)
         tdim = np.zeros(b)
         
         for i in range(b):
-            I = np.meshgrid(split[i], split[i], indexing='ij')
-            tX = X[tuple(I)]
-
-            
-
-            _, _, reg, _, _, npoints = estimate(tX, fraction=fraction, verbose=False)
-            tdim[i] = reg           
+            load_file = np.load(X+'_block-'+str(b)+'-'+str(i)+'.npy')
+            _, _, reg, _, _, npoints = estimate(load_file,fraction=fraction, verbose=False)
+            tdim[i] = reg            
        
         dim[blocks.index(b)] = np.mean(tdim)
         std[blocks.index(b)] = np.std(tdim)
@@ -109,20 +103,63 @@ def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):
 #     return block_df
 
 
-# def plot_curve_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
-#     fig.add_trace(go.Scatter(x = reps,
-#                             y = mean,
-#                             mode ='lines+markers',
-#                             name = name,
-#                             marker = dict(color=cline, size=9),
-#                             line = dict(color=cline, width=3),
-#                             showlegend = legend,      
-#                             ),
-#                     row = r, 
-#                     col = c
-#                 )
-#     return fig
+def plot_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
+    fig.add_trace(go.Scatter(x = reps,
+                            y = mean,
+                            mode ='lines+markers',
+                            name = name,
+                            marker = dict(color=cline, size=9),
+                            line = dict(color=cline, width=3),
+                            showlegend = legend,      
+                            ),
+                    row = r, 
+                    col = c
+                )
 
+    fig.update_xaxes(showline = True, 
+                    linewidth = 1, 
+                    linecolor = 'black',
+                    showticklabels = True, 
+                    tickmode = 'array',
+                    tickvals = np.arange(0, 1.1, 0.1),
+                    range = [-0.01,1.02],
+                    title = 'relative depth',
+                    ticks = 'outside'
+                    )
+
+    fig.update_yaxes(showline = True, 
+                    linewidth = 1, 
+                    linecolor = 'black',
+                    showticklabels = True, 
+                    tickmode = 'array',
+                    tickvals = [i for i in range(0,26,2)],
+                    title = 'ID',
+                    range = [0,24],
+                    ticks = 'outside'
+                    )
+    return fig
+
+
+def update_figure(fig, w, h, save = False, name = ''):
+    fig.update_layout(width = w, 
+                    height = h, 
+                    font = dict(size = 20),
+                    legend = dict(orientation = "h",
+                            yanchor = "top",
+                            y = 1.12,
+                            xanchor = "center",
+                            x = 0.5, 
+                            font = dict(size = 25)
+                            )
+                    ) 
+
+    if save and name != '': 
+        pio.write_image(fig, 
+                        name, 
+                        scale=5, 
+                        width=w, 
+                        height=h)
+    return fig
 
 
 
