@@ -81,6 +81,9 @@ def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):
         for i in range(b):
             I = np.meshgrid(split[i], split[i], indexing='ij')
             tX = X[tuple(I)]
+
+            
+
             _, _, reg, _, _, npoints = estimate(tX, fraction=fraction, verbose=False)
             tdim[i] = reg           
        
@@ -91,34 +94,34 @@ def block_analysis(X, blocks=list(range(1, 21)), fraction=0.8):
     return dim, std, n_points
 
 
-def save_ID_results(dim, std, n_points, filename='', save=False):
-    block_df = pd.DataFrame(columns =  ['dim','std','n_points'])
-    block_df['dim'] = dim
-    block_df['std'] = std
-    block_df['n_points'] = n_points
+# def save_ID_results(dim, std, n_points, filename='', save=False):
+#     block_df = pd.DataFrame(columns =  ['dim','std','n_points'])
+#     block_df['dim'] = dim
+#     block_df['std'] = std
+#     block_df['n_points'] = n_points
     
-    if save:
-        if filename != '':
-            block_df.to_csv(filename, sep='\t', index=False)
-        else:
-            'Missing filename!'
+#     if save:
+#         if filename != '':
+#             block_df.to_csv(filename, sep='\t', index=False)
+#         else:
+#             'Missing filename!'
     
-    return block_df
+#     return block_df
 
 
-def plot_curve_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
-    fig.add_trace(go.Scatter(x = reps,
-                            y = mean,
-                            mode ='lines+markers',
-                            name = name,
-                            marker = dict(color=cline, size=9),
-                            line = dict(color=cline, width=3),
-                            showlegend = legend,      
-                            ),
-                    row = r, 
-                    col = c
-                )
-    return fig
+# def plot_curve_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
+#     fig.add_trace(go.Scatter(x = reps,
+#                             y = mean,
+#                             mode ='lines+markers',
+#                             name = name,
+#                             marker = dict(color=cline, size=9),
+#                             line = dict(color=cline, width=3),
+#                             showlegend = legend,      
+#                             ),
+#                     row = r, 
+#                     col = c
+#                 )
+#     return fig
 
 
 

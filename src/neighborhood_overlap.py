@@ -15,16 +15,21 @@ mapping = {'esm1b':['ESM-1b','rgb(220,20,60)', np.arange(34)],
             'esm-MSA':['ESM-MSA-1b','rgb(66,145,31)',np.arange(13)]
             } 
 
-def get_data(path, label_path, nlayer, ng=100):
+def get_data(path, nlayer, label_path='', ng=100):
     ds = create_ds(nlayer)
     for i in np.arange(0, nlayer+1):
+
         neig = np.load(path + str(i) + '-neigh.npy')
         idx = np.load(path + str(i) + '-idx.npy')
 
-        label = open(label_path + 'sp_lab.txt')
-        label = np.array([l.strip('\n') for l in label])
+        if label_path != '':
+            label = open(label_path + 'sp_lab.txt')
+            label = np.array([l.strip('\n') for l in label])
+            ds = add_data(ds, i, neig, idx, ng, label)
+        
+        else:
+            ds = add_data(ds, i, neig, idx, ng)
 
-        ds = add_data(ds, i, neig, idx, label, ng)
     return ds
 
 
@@ -33,10 +38,12 @@ def create_ds(nlayer):
     return ds
 
 
-def add_data(ds, layer, distances, idxs, labels, knn):
+def add_data(ds, layer, distances, idxs, knn, labels = None):
     ds[layer]['distances'] = distances[:, :knn+1]
     ds[layer]['idxs'] = idxs[:, :knn+1]
-    ds[layer]['labels'] = labels
+
+    if type(labels) != str:
+        ds[layer]['labels'] = labels
     return ds
 
 
@@ -70,7 +77,7 @@ def overlap_layer(ds, l1, l2, k):
     return np.mean(ov) /k
 
 
-def plot_no(fig, layer, df, color, lab, legend=True):
+def plot_no(fig, layer, df, color, lab, title, row=1, col=1, legend=True):
     num = np.arange(layer+1)
     fig.add_trace(go.Scatter(x = num/(len(num)-1),
                             y = df,
@@ -79,19 +86,18 @@ def plot_no(fig, layer, df, color, lab, legend=True):
                             marker = dict(color=color,size=8),
                             line = dict(color=color,width=1.5),
                             showlegend = legend
-                        )
+                        ), row = row, col = col,
                 )
-    return fig
-
-def update_figure(fig, title, w, h, save = False, name = ''):
     fig.update_xaxes(showline = True, 
                     linewidth = 1, 
                     linecolor = 'black',
                     tickvals = np.arange(0, 1.1, 0.1),
                     range = [-0.01,1.02],
                     title = 'relative depth',
-                    ticks = 'outside'
-                    )
+                    ticks = 'outside',
+                    row = row,
+                    col = col,
+                    ) 
 
     fig.update_yaxes(showline = True, 
                     linewidth = 1, 
@@ -99,9 +105,14 @@ def update_figure(fig, title, w, h, save = False, name = ''):
                     tickvals = np.arange(0, 1.1, 0.1), 
                     range = [0,1.02], 
                     title = title, 
-                    ticks = 'outside'
+                    ticks = 'outside',
+                    row = row,
+                    col = col,
                     )
+    return fig
 
+
+def update_figure(fig, w, h, save = False, name = ''):
     fig.update_layout(width = w, 
                     height = h, 
                     font = dict(size = 12),
