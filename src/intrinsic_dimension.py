@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 @author: alessio ansuini (alessioansuini@gmail.com)
 """
@@ -7,11 +5,8 @@ import numpy as np
 from scipy.stats import pearsonr
 from sklearn import linear_model
 import pandas as pd
-import os
-import random
 
 import plotly.graph_objects as go
-import plotly.io as pio
 
               
 def estimate(Y, fraction=0.8, verbose=False):  
@@ -139,27 +134,6 @@ def plot_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
                     )
     return fig
 
-
-def update_figure(fig, w, h, save = False, name = ''):
-    fig.update_layout(width = w, 
-                    height = h, 
-                    font = dict(size = 20),
-                    legend = dict(orientation = "h",
-                            yanchor = "top",
-                            y = 1.12,
-                            xanchor = "center",
-                            x = 0.5, 
-                            font = dict(size = 25)
-                            )
-                    ) 
-
-    if save and name != '': 
-        pio.write_image(fig, 
-                        name, 
-                        scale=5, 
-                        width=w, 
-                        height=h)
-    return fig
 
 
 
