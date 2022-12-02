@@ -104,7 +104,7 @@ def block_analysis(X,blocks=list(range(1, 21)), fraction=0.8):
 
 
 def plot_ID(fig, reps, mean, cline, name, r=1, c=1, legend=True):
-    fig.add_trace(go.Scatter(x = reps,
+    fig.add_trace(go.Scatter(x = reps/(len(reps)-1),
                             y = mean,
                             mode ='lines+markers',
                             name = name,
