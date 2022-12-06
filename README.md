@@ -18,7 +18,7 @@ cd the-geometry-of-hidden-representations
 Create local environment with required packages to run the code: 
 
 ```setup
-conda create --name geomHRpLM --file requirements.txt
+conda create --name geomHRpLM --file environment.yml
 ```
 
 Activate the environment:
