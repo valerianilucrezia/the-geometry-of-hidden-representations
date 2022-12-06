@@ -11,22 +11,30 @@ https://docs.conda.io/projects/conda/en/latest/user-guide/install/
 
 Clone the repository and then type:
 
-``cd the-geometry-of-hidden-representations``
+```setup
+cd the-geometry-of-hidden-representations
+```
 
 Create local environment with required packages to run the code: 
 
-``conda create --name geomHDpLM --file requirements.txt``
+```setup
+conda create --name geomHDpLM --file requirements.txt
+```
 
 Activate the environment:
 
-``conda activate geomHDpLM``
+```setup
+conda activate geomHDpLM
+```
 
 Then, open the jupyter notebook and run the analysis:
 
-``jupyter notebook the_geometry_of_hidden_representations.ipynb``
+```setup
+jupyter notebook the_geometry_of_hidden_representations.ipynb
+```
 
 To deactivate the environment type:
 
-``conda deactivate``
-
-## Repository structure
+```setup
+conda deactivate
+```
