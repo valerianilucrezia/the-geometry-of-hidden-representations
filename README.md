@@ -18,13 +18,13 @@ cd the-geometry-of-hidden-representations
 Create local environment with required packages to run the code: 
 
 ```setup
-conda create --name geomHDpLM --file requirements.txt
+conda create --name geomHRpLM --file requirements.txt
 ```
 
 Activate the environment:
 
 ```setup
-conda activate geomHDpLM
+conda activate geomHRpLM
 ```
 
 Then, open the jupyter notebook and run the analysis:
