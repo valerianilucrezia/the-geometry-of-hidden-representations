@@ -1,3 +1,5 @@
+import numpy as np
+
 mapping = {'esm1b':['ESM-1b','rgb(220,20,60)', np.arange(34)],
             'esm1v':['ESM-1v','rgb(0,139,139)',np.arange(34)],
             'ProtBert':['ProtBert','rgb(136, 78, 160)',np.arange(31)], 
