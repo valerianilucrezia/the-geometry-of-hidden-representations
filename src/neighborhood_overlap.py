@@ -13,7 +13,6 @@ def get_data(path, nlayer, label_path='', ng=100):
             label = open(label_path)
             label = np.array([l.strip('\n') for l in label])
             ds = add_data(ds, i, neig, idx, ng, label)
-        
         else:
             ds = add_data(ds, i, neig, idx, ng)
 

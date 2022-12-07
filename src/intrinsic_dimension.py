@@ -5,12 +5,10 @@ import numpy as np
 from scipy.stats import pearsonr
 from sklearn import linear_model
 import pandas as pd
-
 import plotly.graph_objects as go
 
               
 def estimate(Y, fraction=0.8, verbose=False):  
-    # print('start') 
     k1 = Y[:,0]
     k2 = Y[:,1]
 
